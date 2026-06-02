@@ -1,62 +1,58 @@
-========================================================================
-             INSTRUÇÕES DE COMPILAÇÃO E EXECUÇÃO - JAVA RMI
-========================================================================
+## Leonardo Ian de Oliveira
+## Atividade - Resposta ao Desafio M3
 
-Este projeto consiste em uma aplicação de Conta Bancária Distribuída utilizando
-Java RMI (Remote Method Invocation). O servidor gerencia o estado centralizado
-da conta e múltiplos clientes podem se conectar concorrentemente.
+# 🏦 Conta Bancária Distribuída - Java RMI
 
-Arquivos inclusos na aplicação:
-  - ContaBancaria.java       (Interface Remota)
-  - ContaBancariaImpl.java   (Implementação do Objeto Remoto)
-  - ContaBancariaServer.java (Programa Servidor)
-  - ContaBancariaClient.java (Programa Cliente Interativo)
+Este projeto é uma aplicação cliente-servidor desenvolvida em Java que simula as operações básicas de uma conta bancária utilizando **RMI (Remote Method Invocation)**. O sistema permite que múltiplos clientes acessem e modifiquem o saldo da mesma conta remotamente de forma segura e concorrente.
 
-------------------------------------------------------------------------
-PASSO 1: PRÉ-REQUISITOS
-------------------------------------------------------------------------
-Certifique-se de que o Java Development Kit (JDK 8 ou superior) está instalado
-e que os comandos 'javac' e 'java' estão configurados nas variáveis de ambiente.
+## 🚀 Funcionalidades
 
-------------------------------------------------------------------------
-PASSO 2: COMPILAÇÃO
-------------------------------------------------------------------------
-Abra o terminal do seu sistema operacional na pasta onde se encontram os
-quatro arquivos de código-fonte (.java) e execute o comando abaixo para
-compilar todos os arquivos simultaneamente:
+* **Consulta de Saldo:** Retorna o valor atual da conta.
+* **Depósito:** Adiciona um valor ao saldo existente.
+* **Saque (Retirada):** Deduz um valor do saldo (com validação de saldo suficiente).
+* **Controle de Concorrência:** Utilização da palavra-chave `synchronized` nos métodos remotos para garantir a integridade dos dados (evitando *race conditions* quando múltiplos clientes tentam sacar ou depositar ao mesmo tempo).
 
-  javac *.java
+## 📂 Estrutura do Código
 
-Nota: Em versões modernas do Java (Java 5+), os stubs e skeletons dinâmicos
-são gerados em tempo de execução automaticamente, tornando o uso do utilitário 
-'rmic' obsoleto.
+O projeto é composto por quatro arquivos principais:
 
-------------------------------------------------------------------------
-PASSO 3: EXECUÇÃO DO SERVIDOR
-------------------------------------------------------------------------
-Ainda na pasta do projeto, execute a classe que inicia o registro RMI e 
-hospeda a aplicação servidora:
+* `ContaBancaria.java`: A interface remota que define os métodos (contrato) que o servidor disponibiliza.
+* `ContaBancariaImpl.java`: A implementação das regras de negócio e do controle de concorrência.
+* `ContaBancariaServer.java`: O servidor que inicializa o serviço de registro RMI (`rmiregistry` na porta 1099) e publica o objeto da conta.
+* `ContaBancariaClient.java`: A aplicação cliente que consome o serviço remoto através de um menu interativo no terminal.
 
-  java ContaBancariaServer
+---
 
-O terminal exibirá a mensagem indicando que o servidor está pronto e ativo.
-Mantenha este terminal aberto.
+## 🛠️ Passo a Passo para Execução (VS Code / Codespaces)
 
-------------------------------------------------------------------------
-PASSO 4: EXECUÇÃO DOS CLIENTES (TESTE DE CONCORRÊNCIA)
-------------------------------------------------------------------------
-Para testar o acesso compartilhado de vários clientes simultaneamente:
+Para testar esta aplicação corretamente, você precisará rodar o servidor e os clientes ao mesmo tempo. Siga os passos exatos abaixo:
 
-1. Abra um NOVO terminal (ou prompt de comando) na pasta do projeto.
-2. Execute o programa cliente com o comando:
+### Passo 1: Compilar o código
+1. Abra o terminal integrado no VS Code / Codespaces.
+2. Certifique-se de estar na raiz do projeto (onde os arquivos `.java` estão).
+3. Digite o comando abaixo e pressione **Enter**:
    
-     java ContaBancariaClient
+   javac *.java
 
-3. Repita o processo abrindo um TERCEIRO terminal e executando o mesmo comando 
-   do cliente novamente.
+## Passo 2: Iniciar o Servidor Remoto
+1. No mesmo terminal, inicie o servidor digitando o comando:
+    
+    java ContaBancariaServer
 
-Agora você terá múltiplas instâncias clientes operando interativamente e
-em tempo real sobre o saldo unificado armazenado no servidor. Assegurado 
-pelo modificador 'synchronized', os saques concorrentes não gerarão 
-inconsistências de saldo negativo ou concorrência desordenada.
-========================================================================
+2. O terminal exibirá uma mensagem indicando que o servidor está aguardando conexões. Não feche e não pare a execução deste terminal.
+
+## Passo 3: Abrir um novo Terminal para o Cliente
+1. Olhe para a barra superior do painel do terminal (onde estão escritas as abas "PROBLEMAS", "SAÍDA", "TERMINAL").
+2. Clique no ícone Dividir Terminal (um ícone de um retângulo dividido ao meio, localizado no lado direito, perto da lixeira).
+3. Um novo terminal em branco será aberto ao lado do terminal do servidor.
+
+## Passo 4: Executar o Cliente 
+1. Neste novo terminal, inicie o aplicativo cliente digitando:
+    java ContaBancariaClient
+
+2. O menu interativo da conta bancária aparecerá. Siga as instruções na tela para consultar o saldo, depositar ou sacar.
+
+## Passo 5: Testar a Concorrência (Múltiplos Clientes)
+1. Repita o Passo 3 para abrir uma terceira aba de terminal.
+2. Repita o Passo 4 para iniciar um segundo cliente simultâneo.
+3. Tente realizar operações nos dois terminais de clientes ao mesmo tempo. Você notará que o servidor processa as requisições de forma ordenada, mantendo o saldo unificado e consistente.
