@@ -1,58 +1,203 @@
-## Leonardo Ian de Oliveira
-## Atividade - Resposta ao Desafio M3
+# 🏦 Conta Bancária Distribuída — Java RMI
 
-# 🏦 Conta Bancária Distribuída - Java RMI
+![Java](https://img.shields.io/badge/Java-RMI-orange?style=flat-square&logo=java)
+![Status](https://img.shields.io/badge/status-concluído-brightgreen?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
-Este projeto é uma aplicação cliente-servidor desenvolvida em Java que simula as operações básicas de uma conta bancária utilizando **RMI (Remote Method Invocation)**. O sistema permite que múltiplos clientes acessem e modifiquem o saldo da mesma conta remotamente de forma segura e concorrente.
+> Atividade — **Resposta ao Desafio M3** | Disciplina de Sistemas Distribuídos
+> Autor: **Leonardo Ian de Oliveira**
 
-## 🚀 Funcionalidades
-
-* **Consulta de Saldo:** Retorna o valor atual da conta.
-* **Depósito:** Adiciona um valor ao saldo existente.
-* **Saque (Retirada):** Deduz um valor do saldo (com validação de saldo suficiente).
-* **Controle de Concorrência:** Utilização da palavra-chave `synchronized` nos métodos remotos para garantir a integridade dos dados (evitando *race conditions* quando múltiplos clientes tentam sacar ou depositar ao mesmo tempo).
-
-## 📂 Estrutura do Código
-
-O projeto é composto por quatro arquivos principais:
-
-* `ContaBancaria.java`: A interface remota que define os métodos (contrato) que o servidor disponibiliza.
-* `ContaBancariaImpl.java`: A implementação das regras de negócio e do controle de concorrência.
-* `ContaBancariaServer.java`: O servidor que inicializa o serviço de registro RMI (`rmiregistry` na porta 1099) e publica o objeto da conta.
-* `ContaBancariaClient.java`: A aplicação cliente que consome o serviço remoto através de um menu interativo no terminal.
+Aplicação cliente-servidor desenvolvida em **Java** que simula as operações básicas de uma conta bancária utilizando **RMI (Remote Method Invocation)**. O sistema permite que **múltiplos clientes** acessem e modifiquem o saldo da **mesma conta** remotamente, de forma segura e concorrente.
 
 ---
 
-## 🛠️ Passo a Passo para Execução (VS Code / Codespaces)
+## 📋 Sumário
 
-Para testar esta aplicação corretamente, você precisará rodar o servidor e os clientes ao mesmo tempo. Siga os passos exatos abaixo:
+- [Sobre o desafio](#-sobre-o-desafio)
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias](#-tecnologias)
+- [Estrutura do projeto](#-estrutura-do-projeto)
+- [Pré-requisitos](#-pré-requisitos)
+- [Como executar](#️-como-executar)
+- [Testando a concorrência](#-testando-a-concorrência)
+- [Detalhes técnicos](#-detalhes-técnicos)
+- [Autor](#-autor)
 
-### Passo 1: Compilar o código
-1. Abra o terminal integrado no VS Code / Codespaces.
-2. Certifique-se de estar na raiz do projeto (onde os arquivos `.java` estão).
-3. Digite o comando abaixo e pressione **Enter**:
-   
-   javac *.java
+---
 
-## Passo 2: Iniciar o Servidor Remoto
-1. No mesmo terminal, inicie o servidor digitando o comando:
-    
-    java ContaBancariaServer
+## 🎯 Sobre o desafio
 
-2. O terminal exibirá uma mensagem indicando que o servidor está aguardando conexões. Não feche e não pare a execução deste terminal.
+> *"Desenvolva uma aplicação RMI onde um objeto remoto é uma conta bancária e vários clientes podem acessar essa conta. O objeto remoto deve implementar no mínimo os métodos de **deposita**, **retira** e **saldo**."*
 
-## Passo 3: Abrir um novo Terminal para o Cliente
-1. Olhe para a barra superior do painel do terminal (onde estão escritas as abas "PROBLEMAS", "SAÍDA", "TERMINAL").
-2. Clique no ícone Dividir Terminal (um ícone de um retângulo dividido ao meio, localizado no lado direito, perto da lixeira).
-3. Um novo terminal em branco será aberto ao lado do terminal do servidor.
+Este repositório atende a todos os requisitos solicitados e adiciona melhorias como:
 
-## Passo 4: Executar o Cliente 
-1. Neste novo terminal, inicie o aplicativo cliente digitando:
-    java ContaBancariaClient
+- ✅ Controle de concorrência com `synchronized`
+- ✅ Validação de saldo na operação de saque
+- ✅ Cliente em interface gráfica (Swing) — **bônus**
+- ✅ Cliente em modo terminal com menu interativo
 
-2. O menu interativo da conta bancária aparecerá. Siga as instruções na tela para consultar o saldo, depositar ou sacar.
+---
 
-## Passo 5: Testar a Concorrência (Múltiplos Clientes)
-1. Repita o Passo 3 para abrir uma terceira aba de terminal.
-2. Repita o Passo 4 para iniciar um segundo cliente simultâneo.
-3. Tente realizar operações nos dois terminais de clientes ao mesmo tempo. Você notará que o servidor processa as requisições de forma ordenada, mantendo o saldo unificado e consistente.
+## 🚀 Funcionalidades
+
+| Operação | Descrição |
+|---|---|
+| 💰 **Saldo** | Consulta o saldo atual da conta. |
+| ⬆️ **Depósito** | Adiciona um valor ao saldo da conta. |
+| ⬇️ **Saque** | Retira um valor, validando se há saldo suficiente. |
+| 🔒 **Concorrência** | Métodos remotos sincronizados (`synchronized`) garantem integridade entre múltiplos clientes simultâneos. |
+
+---
+
+## 🛠️ Tecnologias
+
+- **Java SE** (JDK 8 ou superior)
+- **Java RMI** (`java.rmi.*`)
+- **Swing** (para o cliente GUI)
+- **rmiregistry** embutido na porta `1099`
+
+---
+
+## 📂 Estrutura do projeto
+
+```
+Resposta_ao_desafio_M3/
+├── ContaBancaria.java          → Interface remota (contrato RMI)
+├── ContaBancariaImpl.java      → Implementação do objeto remoto
+├── ContaBancariaServer.java    → Servidor que registra o objeto no RMI
+├── ContaBancariaClient.java    → Cliente em modo terminal (menu)
+├── ContaBancariaClientGUI.java → Cliente em interface gráfica (Swing)
+├── README.md                   → Este arquivo
+└── README.txt                  → Instruções em texto puro (exigência da atividade)
+```
+
+### Interface remota
+
+```java
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface ContaBancaria extends Remote {
+    void deposita(double valor) throws RemoteException;
+    boolean retira(double valor) throws RemoteException;
+    double saldo() throws RemoteException;
+}
+```
+
+---
+
+## 📦 Pré-requisitos
+
+- **JDK 8+** instalado e configurado no `PATH`
+- Terminal (cmd, PowerShell, bash ou terminal do VS Code)
+
+Verifique a instalação com:
+
+```bash
+java -version
+javac -version
+```
+
+---
+
+## ▶️ Como executar
+
+### Passo 1 — Clonar o repositório
+
+```bash
+git clone https://github.com/leonardoian/Resposta_ao_desafio_M3.git
+cd Resposta_ao_desafio_M3
+```
+
+### Passo 2 — Compilar o código
+
+Na raiz do projeto (onde estão os arquivos `.java`):
+
+```bash
+javac *.java
+```
+
+### Passo 3 — Iniciar o servidor
+
+Em um terminal:
+
+```bash
+java ContaBancariaServer
+```
+
+> ⚠️ Mantenha este terminal aberto. O servidor exibirá uma mensagem indicando que está aguardando conexões na porta **1099**.
+
+### Passo 4 — Executar o cliente (modo terminal)
+
+Abra um **novo terminal** e rode:
+
+```bash
+java ContaBancariaClient
+```
+
+Um menu interativo aparecerá com as opções de saldo, depósito e saque.
+
+### Passo 4b — Executar o cliente gráfico (opcional)
+
+```bash
+java ContaBancariaClientGUI
+```
+
+---
+
+## 🧪 Testando a concorrência
+
+Para validar o controle de acesso simultâneo:
+
+1. Mantenha o servidor rodando no primeiro terminal.
+2. Abra **dois ou mais** terminais adicionais.
+3. Em cada um, execute `java ContaBancariaClient` (ou o GUI).
+4. Realize operações simultâneas (ex.: deposite num terminal e consulte o saldo no outro).
+
+Você verá que o saldo permanece **consistente e unificado** entre todos os clientes — graças ao `synchronized` nos métodos remotos.
+
+> 💡 **Dica para VS Code / Codespaces:** use o ícone *Dividir Terminal* (canto superior direito do painel) para abrir várias abas lado a lado.
+
+---
+
+## 🔧 Detalhes técnicos
+
+| Item | Valor |
+|---|---|
+| Porta do RMI Registry | `1099` |
+| Nome do serviço no registry | `ContaBancaria` |
+| Estratégia de concorrência | `synchronized` nos métodos da implementação |
+| Tipo de dado do saldo | `double` |
+
+### Como funciona o RMI nesta aplicação
+
+```
+┌─────────────────┐      Stub      ┌──────────────────┐
+│   Cliente(s)    │ ─────────────► │   RMI Registry   │
+│                 │   (lookup)     │   porta 1099     │
+└─────────────────┘                └──────────────────┘
+        │                                    │
+        │                                    │ bind
+        │  Invocação remota                  ▼
+        │  (deposita/retira/saldo)   ┌──────────────────┐
+        └───────────────────────────►│ ContaBancariaImpl│
+                                     │  (objeto remoto) │
+                                     └──────────────────┘
+```
+
+---
+
+## 👤 Autor
+
+**Leonardo Ian de Oliveira**
+🎓 Graduação em Sistemas Distribuídos
+📍 Canoas, RS — Brasil
+🔗 [GitHub: @leonardoian](https://github.com/leonardoian)
+
+---
+
+<div align="center">
+
+⭐ Se este projeto foi útil para você, considere dar uma estrela no repositório!
+
+</div>
